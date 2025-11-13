@@ -4,6 +4,7 @@ Compatible con Neon PostgreSQL y SQLModel.
 """
 
 from typing import List
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from app.models import (
@@ -31,7 +32,7 @@ def crear_tablero(
     session: Session = Depends(get_session)
 ) -> TableroElectricoRead:
     """Crea un nuevo tablero eléctrico en la base de datos."""
-    db_tablero = TableroElectrico.model_validate(tablero)
+    db_tablero = TableroElectrico.from_orm(tablero)
     session.add(db_tablero)
     session.commit()
     session.refresh(db_tablero)
@@ -61,7 +62,7 @@ def listar_tableros(session: Session = Depends(get_session)) -> List[TableroElec
     response_model=TableroElectricoRead,
     summary="Obtener un tablero eléctrico por ID",
 )
-def obtener_tablero(tablero_id: str, session: Session = Depends(get_session)) -> TableroElectricoRead:
+def obtener_tablero(tablero_id: UUID, session: Session = Depends(get_session)) -> TableroElectricoRead:
     """Obtiene un tablero específico por su ID."""
     tablero = session.get(TableroElectrico, tablero_id)
     if not tablero:
@@ -81,7 +82,7 @@ def obtener_tablero(tablero_id: str, session: Session = Depends(get_session)) ->
     summary="Actualizar un tablero eléctrico existente",
 )
 def actualizar_tablero(
-    tablero_id: str,
+    tablero_id: UUID,
     tablero_update: TableroElectricoUpdate,
     session: Session = Depends(get_session)
 ) -> TableroElectricoRead:
@@ -112,7 +113,7 @@ def actualizar_tablero(
     status_code=status.HTTP_200_OK,
     summary="Eliminar un tablero eléctrico",
 )
-def eliminar_tablero(tablero_id: str, session: Session = Depends(get_session)) -> dict:
+def eliminar_tablero(tablero_id: UUID, session: Session = Depends(get_session)) -> dict:
     """Elimina un tablero eléctrico por ID."""
     tablero = session.get(TableroElectrico, tablero_id)
     if not tablero:

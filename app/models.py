@@ -4,7 +4,7 @@ Incluye validación, creación, lectura y actualización.
 """
 
 from typing import Optional
-from uuid import uuid4
+from uuid import UUID, uuid4
 from sqlmodel import SQLModel, Field
 
 
@@ -18,24 +18,24 @@ class TableroElectrico(SQLModel, table=True):
     """
     __tablename__ = "tableros_electricos"
 
-    id: str = Field(default_factory=lambda: str(uuid4()), primary_key=True, index=True)
-    nombre: str = Field(..., min_length=1, max_length=255, description="Nombre del tablero")
-    ubicacion: str = Field(..., min_length=1, max_length=255, description="Ubicación del tablero")
-    marca: Optional[str] = Field(None, max_length=255, description="Marca del tablero")
-    capacidad_amperios: float = Field(..., gt=0, description="Capacidad en amperios")
+    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+    nombre: str = Field(..., min_length=1, max_length=255, description="Nombre del tablero (ej. 'Tablero Piso 1 - Ala Norte')")
+    ubicacion: str = Field(..., min_length=1, max_length=255, description="Ubicación del tablero (ej. 'Sala de máquinas, Sótano 1')")
+    marca: Optional[str] = Field(None, max_length=255, description="Marca del tablero (opcional)")
+    capacidad_amperios: float = Field(..., gt=0, description="Capacidad del tablero en amperios (ej. 100)")
     estado: str = Field(
         default="Operativo",
-        description="Estado: Operativo, Mantenimiento o Fuera de Servicio"
+        description="Estado del tablero (Operativo, Mantenimiento o Fuera de Servicio)"
     )
-    ano_fabricacion: int = Field(..., ge=1900, le=2100, description="Año de fabricación")
-    ano_instalacion: int = Field(..., ge=1900, le=2100, description="Año de instalación")
+    ano_fabricacion: int = Field(..., ge=1900, le=2100, description="Año de fabricación (ej. 2020)")
+    ano_instalacion: int = Field(..., ge=1900, le=2100, description="Año de instalación (ej. 2021)")
 
 
 # ==========================
-# Esquemas Pydantic
+# Esquemas Pydantic / API
 # ==========================
 class TableroElectricoBase(SQLModel):
-    """Propiedades compartidas entre creación y lectura."""
+    """Propiedades compartidas entre creación, lectura y actualización."""
     nombre: str = Field(..., min_length=1, max_length=255)
     ubicacion: str = Field(..., min_length=1, max_length=255)
     marca: Optional[str] = Field(None, max_length=255)
@@ -46,12 +46,12 @@ class TableroElectricoBase(SQLModel):
 
 
 class TableroElectricoCreate(TableroElectricoBase):
-    """Esquema para crear un nuevo Tablero Eléctrico."""
+    """Esquema para creación de un Tablero Eléctrico."""
     pass
 
 
 class TableroElectricoUpdate(SQLModel):
-    """Esquema para actualizar un Tablero Eléctrico existente."""
+    """Esquema para actualización parcial de un Tablero Eléctrico."""
     nombre: Optional[str] = Field(None, min_length=1, max_length=255)
     ubicacion: Optional[str] = Field(None, min_length=1, max_length=255)
     marca: Optional[str] = Field(None, max_length=255)
@@ -63,7 +63,7 @@ class TableroElectricoUpdate(SQLModel):
 
 class TableroElectricoRead(TableroElectricoBase):
     """Esquema para lectura (respuesta en API)."""
-    id: str
+    id: UUID
 
     class Config:
         from_attributes = True
