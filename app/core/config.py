@@ -2,7 +2,6 @@
 Configuración de la aplicación usando Pydantic Settings
 """
 from pydantic_settings import BaseSettings
-from typing import Optional
 
 
 class Settings(BaseSettings):

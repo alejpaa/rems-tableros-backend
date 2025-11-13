@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.api.routes_root import api_router
 from app.core.db import init_db
-
+from app.core.config import settings
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,7 +21,8 @@ app = FastAPI(
     title="REMS Tableros Backend",
     version="1.0.0",
     description="API para gestionar tableros eléctricos",
-    lifespan=lifespan
+    lifespan=lifespan,
+    debug=settings.debug,
 )
 
 # Montar rutas
