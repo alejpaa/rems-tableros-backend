@@ -23,3 +23,8 @@ def root():
     Endpoint raíz de la API
     """
     return {"message": "🚀 API de REMS - Backend activo"}
+
+@api_router.get("/health")
+def health():
+    return {"status": "ok"}
+
