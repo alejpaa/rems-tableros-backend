@@ -4,7 +4,7 @@ Usa el driver psycopg2 para conexiones sincrónicas con SQLModel.
 """
 
 from sqlmodel import SQLModel, create_engine, Session
-from config import settings
+from app.core.config import settings
 
 # Crear engine sincrónico para Neon PostgreSQL
 # SQLModel internamente usa SQLAlchemy, por lo tanto `create_engine` es compatible.
