@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.api.routes_root import api_router
 from app.core.db import init_db
@@ -23,6 +24,14 @@ app = FastAPI(
     description="API para gestionar tableros eléctricos",
     lifespan=lifespan,
     debug=settings.debug,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"], 
 )
 
 # Montar rutas
