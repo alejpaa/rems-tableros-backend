@@ -5,6 +5,7 @@ Incluye validación, creación, lectura y actualización.
 
 from typing import Optional
 from uuid import UUID, uuid4
+from datetime import datetime, timezone
 from sqlmodel import SQLModel, Field
 
 
@@ -29,6 +30,8 @@ class TableroElectrico(SQLModel, table=True):
     )
     ano_fabricacion: int = Field(..., ge=1900, le=2100, description="Año de fabricación (ej. 2020)")
     ano_instalacion: int = Field(..., ge=1900, le=2100, description="Año de instalación (ej. 2021)")
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc),description="Fecha y hora de creación del registro"
+)
 
 
 # ==========================
@@ -64,6 +67,7 @@ class TableroElectricoUpdate(SQLModel):
 class TableroElectricoRead(TableroElectricoBase):
     """Esquema para lectura (respuesta en API)."""
     id: UUID
+    created_at: datetime
 
     class Config:
         from_attributes = True

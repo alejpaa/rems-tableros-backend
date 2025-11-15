@@ -48,8 +48,8 @@ def crear_tablero(
     summary="Listar todos los tableros eléctricos",
 )
 def listar_tableros(session: Session = Depends(get_session)) -> List[TableroElectricoRead]:
-    """Devuelve una lista de todos los tableros eléctricos registrados."""
-    statement = select(TableroElectrico)
+    """Devuelve una lista de todos los tableros eléctricos registrados ordenados por fecha de creación."""
+    statement = select(TableroElectrico).order_by(TableroElectrico.created_at)
     results = session.exec(statement).all()
     return results
 
